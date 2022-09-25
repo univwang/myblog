@@ -7,13 +7,13 @@ title: 我的博客
 subtitle: ''
 description: ''
 keywords:
-author: 王乾宇
+author: wang
 language: zh-CN
 timezone: ''
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
-url: https://wangqianyv123.github.io
+url: https://blog-univwang.vercel.app
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 pretty_urls:
