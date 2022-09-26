@@ -454,6 +454,7 @@ footer:
 
 
 #---------------------------
+
 # 首页
 # Home Page
 #---------------------------
@@ -462,7 +463,7 @@ index:
   # Path of Banner image, can be a relative path or an absolute path, the same on other pages
   # banner_img: /img/default.png
   # banner_img: /img/banner_img/background3.jpg
-  
+
   banner_img: https://bing.biturl.top/?resolution=1920&format=image&index=0&mkt=zh-CN
 
   # 头图高度，屏幕百分比
