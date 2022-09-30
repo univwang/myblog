@@ -30,7 +30,8 @@ King of bot项目
 
 ## 问题
 
-1. vue中的<router-view></router-view>用于页面跳转
+1. vue中的\<router-view></router-view>用于页面跳转
+   ![](https://raw.githubusercontent.com/univwang/img/main/202209302030474.png)
 2. 如何设置背景
 
 ```css
