@@ -13,6 +13,14 @@ top命令是Linux下常用的性能分析工具，能够实时显示系统中各
 ```
 top
 ```
+## 创建用户并配置sudo权限
+
+```sh
+adduser me  # 创建用户
+usermod -aG sudo me  # 给用户分配sudo权限
+```
+
+
 ## ssh的使用
 ```
 service sshd start
