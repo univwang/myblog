@@ -13,6 +13,23 @@ top命令是Linux下常用的性能分析工具，能够实时显示系统中各
 ```
 top
 ```
+### 安装vm-tools
+
+```sh
+#无图形化界面
+sudo apt-get install open-vm-tools
+#有图形化界面
+sudo apt-get install open-vm-tools-desktop
+```
+### Linux目录中/和~的区别
+
+/是指根目录：就是所有目录最顶层的目录
+~是当前用户的主目录：如果是root用户就是/root/目录， 如果是其他用户就是/home/下用户名命名的用户，该主目录是我们在新建某个Linux账户的时候指定的一个目录。 
+比如，root用户的主目录是/root,那么~对应/root,如果我们新建一个用户wsys对应主目录/home/wsys,那么wsys登陆后的目录就是/wsys.
+
+### Linux.开头的文件
+点开头的文件是隐藏文件，需要加-a参数才能被显示和列表。如.tumx.conf
+
 ## 创建用户并配置sudo权限
 
 ```sh
