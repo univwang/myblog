@@ -9,10 +9,19 @@ banner_img: /img/banner_img/background4.jpg
 ---
 
 ## 日常使用
+
+### 查看linux资源占用情况
 top命令是Linux下常用的性能分析工具，能够实时显示系统中各个进程的资源占用状况，类似于Windows的任务管理器。
-```
+```sh
 top
 ```
+
+### 查看linux硬盘空间使用
+
+```sh
+df -h
+```
+
 ### 安装vm-tools
 
 ```sh
