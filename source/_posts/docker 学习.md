@@ -104,6 +104,19 @@ $docker attach ID
 $docker exec -it ID /bin/bash
 ```
 
+### 常用操作
+
+```sh
+#删除虚悬镜像
+$docker image prune
+
+#删除退出状态的镜像
+$docker rm $(docker ps -a|grep Exited|awk '{print $1}')
+
+$docker rm $(docker ps -qf status=exited)
+
+```
+
 
 ### 镜像仓库
 
