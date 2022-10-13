@@ -12,6 +12,10 @@ banner_img: /img/banner_img/background6.jpg
 
 ## ARMA和SARIMA
 
+- AR：  自回归。一种模型，它使用观察值和一些滞后观察值之间的依赖关系。
+- I：  综合。为了使时间序列平稳，使用原始观测值的差异（例如，从上一个时间步长的观测值中减去观测值）。
+- MA：  移动平均。一种模型，该模型使用观察值与应用于滞后观察值的移动平均模型的残差之间的依赖关系。
+
 SARIMA（Seasonal ARIMA）：ARIMA的扩展版本，可以支持带有季节性成分的时间序列数据。在ARIMA(p,d,q)基础上又增加了3个超参数(P,D,Q)，以及一个额外的季节性周期参数 s。
 
 SARIMA(p,d,q)(P,D,Q,s)总共7个参数，可以分成2类，3个非季节参数(p,d,q)，和4个季节参数(P,D,Q,s)。
@@ -44,7 +48,48 @@ fig = sm.graphics.tsa.plot_pacf(monthly_train['Temp'].iloc[13:],lags=40,ax=ax2)
 ```
 ![](https://raw.githubusercontent.com/univwang/img/main/20221012225229.png)
 
+### 使用auto_arima
+
+```python
+def auto_parameters(data, s_num):
+
+    # s_sum是传入的季节性周期参数
+    # 主要调整auto_arima中的pqd参数
+    
+    kpss_diff = arima.ndiffs(data, alpha=0.05, test='kpss', max_d=s_num)
+    adf_diff = arima.ndiffs(data, alpha=0.05, test='adf', max_d=s_num)
+    d = max(kpss_diff, adf_diff)
+    D = arima.nsdiffs(data, s_num)
+
+    stepwise_model = auto_arima(data, start_p=0, start_q=0,
+                                max_p=4, max_q=2, max_d=2, m=s_num,
+                                seasonal=True, d=d, D=D, trace=True,
+                                error_action='ignore',
+                                suppress_warnings=True,
+                                stepwise=True)
+    print("AIC: ", stepwise_model.aic())
+    print(stepwise_model.order)		# (p,d,q)
+    print(stepwise_model.seasonal_order)	# (P,D,Q,S)
+    print(stepwise_model.summary())		# 详细模型
+    return stepwise_model.order, stepwise_model.seasonal_order
+
+```
+
 ## 判断模型的好坏
+
+测试数据稳定性的方法
+```python
+def test_stationarity(timeseries):
+  dftest = adfuller(timeseries, autolag='AIC')
+  dfoutput = pd.Series(dftest[0:4], index=['Test Statistic','p-value','#Lags Used','Number of Observations Used'])
+
+  for key,value in dftest[4].items():
+    dfoutput['Critical Value (%s)'%key] = value
+  return dfoutput['p-value']
+# p-value < 0.05时较好，否则需要通过差分使数据稳定
+```
+
+
 ```python
 results.plot_diagnostics(figsize=(15, 12))
 plt.show()
@@ -70,3 +115,17 @@ BIC=-2 ln(L) + ln(n)*k 中文名字：贝叶斯信息量 bayesian information cr
 HQ=-2 ln(L) + ln(ln(n))*k hannan-quinn criterion
 L是在该模型下的最大似然，n是数据数量，k是模型的变量个数
 三个模型A, B, C，在通过这些规则计算后，我们知道B模型是三个模型中最好的，但是不能保证B这个模型就能够很好地刻画数据，因为很有可能这三个模型都是非常糟糕的，B只是烂苹果中的相对好的苹果而已。
+
+
+
+## 模型预测
+
+```python
+# 模型静态数据预测
+predict = results.predict()
+# 预测数据外的24个点
+predict_forecast = results.forecast(24)
+
+# 计算模型的误差
+mse = mean_squared_error(predict,df[predict.index])
+```
