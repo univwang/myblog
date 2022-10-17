@@ -112,12 +112,17 @@ deploy:
   # repository: https://github.com/wangqianyv123/wangqianyv123.github.io.git
   repository: git@github.com:wangqianyv123/wangqianyv123.github.io.git
 
-math:
-  engine: katex
-  katex:
-    css: https://fastly.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css
-    js: https://fastly.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.js
-    config:
-      # KaTeX config
-      throwOnError: false
-      errorColor: "#cc0000"
+
+markdown:
+  plugins:
+    - "@traptitech/markdown-it-katex"
+
+# math:
+#   engine: katex
+#   katex:
+#     css: https://fastly.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css
+#     js: https://fastly.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.js
+#     config:
+#       # KaTeX config
+#       throwOnError: false
+#       errorColor: "#cc0000"
