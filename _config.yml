@@ -120,8 +120,8 @@ deploy:
 math:
   engine: katex
   katex:
-    css: https://fastly.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css
-    js: https://fastly.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.js
+    css: https://fastly.jsdelivr.net/npm/katex@0.15.0/dist/katex.min.css
+    js: https://fastly.jsdelivr.net/npm/katex@0.15.0/dist/katex.min.js
     config:
       # KaTeX config
       throwOnError: false

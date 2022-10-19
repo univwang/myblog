@@ -8,7 +8,7 @@ index_img: /img/index_img/4.png
 banner_img: /img/banner_img/background5.jpg
 ---
 
-<p class="note note-primary">不统计数量，而是其他数字相关量时数位dp该如何求解</p>
+<p class="note note-primary">不统计数量，而是其他数字相关量时，该如何使用数位dp求解</p>
 
 
 ## 简单方法
