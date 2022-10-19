@@ -1,7 +1,7 @@
 ---
 title: LCP 69. Hello LeetCode!
 date: 2022-10-13 22:42:18
-tags: [Leetcode]
+tags: [Leetcode, 状态压缩dp]
 excerpt: 一道状态压缩dp的困难题
 categories: Leetcode
 index_img: /img/index_img/7.png
