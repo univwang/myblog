@@ -22,7 +22,7 @@ for(int i=l;i<=r;i++){
 ## 解题思路
 
 一般题目可以通过求解$dp[0, r]$和$dp[0, l - 1]$，两式相减得到答案。
-有两种解题模板，一种是提前预处理0-9数字任意取的情况下的答案（也就是左支），然后按照树的顺序遍历数字a。第二种是使用**记忆化搜索**的方法，代码量低
+有两种解题模板，一种是提前预处理0-9数字任意取的情况下的答案（也就是左支），然后按照树的顺序遍历数字a。第二种是使用**记忆化搜索**的方法，代码量低。
 
 <a class="btn" target="_blank" rel="noopener" style="font-size:20px; color: green" href="https://leetcode.cn/problems/count-special-integers/" title="github">例题：统计特殊整数</a>
 
@@ -101,7 +101,7 @@ public:
 
 ## 模板二（推荐）
 
-$dp$数组的维度设置要可以确定后续数组的选择。如该例题，$dp[i][mask]$表示前缀已选$mask$的状态下，剩下的数字随便选的结果。因为只要已选数字的$mask$确定了，后续如何选择是固定的
+$dp$数组的维度设置要可以确定后续数组的选择。如该例题，$dp[i][mask]$表示前缀已选$mask$的状态下，剩下的数字随便选的结果。因为只要已选数字的$mask$确定了，后续如何选择是固定的。
 
 ```c++
 class Solution {
@@ -141,3 +141,13 @@ public:
     }
 };
 ```
+
+
+## 一些练习题目
+|题目|备注|
+|--|--|
+|[最大为 N 的数字组合 - 力扣（LeetCode）](https://leetcode.cn/problems/numbers-at-most-n-given-digit-set/) |简单|
+|[不含连续1的非负整数 - 力扣（LeetCode）](https://leetcode.cn/problems/non-negative-integers-without-consecutive-ones/) |一个状态|
+|[至少有 1 位重复的数字 - 力扣（LeetCode）](https://leetcode.cn/problems/numbers-with-repeated-digits/) |多个状态|
+|[数字 1 的个数 - 力扣（LeetCode）](https://leetcode.cn/problems/number-of-digit-one/) |不统计数量，而是其他数字相关量|
+|[恨7不成妻 - AcWing题库](https://www.acwing.com/problem/content/description/1088/) |多个状态且统计的是平方和|
