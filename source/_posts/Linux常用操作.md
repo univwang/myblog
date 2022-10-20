@@ -43,9 +43,34 @@ sudo apt-get install open-vm-tools-desktop
 
 ```sh
 adduser me  # 创建用户
+sudo passwd aaa # 设置用户密码
 usermod -aG sudo me  # 给用户分配sudo权限
+
 ```
 
+给普通用户添加docker命令的权限
+```sh
+usermod -aG docker yukw
+newgrp docker
+```
+
+用户名在/etc/passwd这个文件中；
+
+密码在/etc/shadow中
+
+## linux查询端口
+
+netstat 是一个命令行工具，可以提供有关网络连接的信息。
+
+显示所有已开放端口，请使用以下命令：`netstat -anp`
+
+要列出正在侦听的所有 TCP 或 UDP 端口，包括使用端口和套接字状态的服务，请使用以下命令：`netstat -tunlp`
+
+此命令中使用的选项具有以下含义：
+
+-t – 显示 TCP 端口。-u – 显示 UDP 端口。-n – 显示数字地址而不是主机名。-l – 仅显示侦听端口。-p – 显示进程的 PID 和名称。仅当您以 root 或 sudo 用户身份运行命令时，才会显示此信息。
+
+查询指定端口通过grep过滤：`netstat -tnlp | grep :80`
 
 ## ssh的使用
 ```

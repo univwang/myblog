@@ -1,9 +1,9 @@
 ---
 title: networkx使用
 date: 2022-10-20 19:42:18
-tags: [python]
+tags: [python, 图]
 excerpt: 创建图并进行计算
-categories: python工具库
+categories: python
 index_img: /img/index_img/5.png
 banner_img: /img/banner_img/background6.jpg
 ---
@@ -82,9 +82,9 @@ g.edges[1, 2].update({"weight": 4.7})
 
 ## 图的最短路求解
 
-dijkstra_path(G, source, target, weight='weight')
+$dijkstra_path(G, source, target, weight='weight')$
 
-使用Dijkstra方法计算图中两个节点之间的最短加权路径。返回从源到目标的最短加权路径（g）。默认情况下，求解最短路使用的是边权`weight`。
+使用Dijkstra方法计算图中两个节点之间的最短加权路径。返回从源到目标的最短加权路径$g$。默认情况下，求解最短路使用的是边权`weight`。
 
 
 <dl class="field-list">
