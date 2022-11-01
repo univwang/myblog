@@ -63,8 +63,11 @@ code:
       # 在链接中挑选 style 填入
       # Select a style in the link
       # See: https://highlightjs.org/static/demo/
-      style: "Atom One Dark"
+      # style: "Atom One Dark"
       style_dark: "Atom One Dark"
+      style: "Nnfx Light"
+      # style_dark: "Nnfx Dark"
+
 
     prismjs:
       # 在下方链接页面右侧的圆形按钮挑选 style 填入，也可以直接填入 css 链接
