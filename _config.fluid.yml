@@ -63,6 +63,7 @@ code:
       # 在链接中挑选 style 填入
       # Select a style in the link
       # See: https://highlightjs.org/static/demo/
+      # Vs Vs 2015
       # style: "Atom One Dark"
       style_dark: "Atom One Dark"
       style: "Nnfx Light"
