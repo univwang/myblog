@@ -956,7 +956,7 @@ about:
   banner_img: /img/default.png
   banner_img_height: 60
   banner_mask_alpha: 0.3
-  avatar: https://cdn.acwing.com/media/user/profile/photo/115622_lg_37336fb910.jpg
+  avatar: /img/show.png
   name: "wang"
   intro: "从初学者开始"
   # 更多图标可从 https://hexo.fluid-dev.com/docs/icon/ 查找，`class` 代表图标的 css class，添加 `qrcode` 后，图标不再是链接而是悬浮二维码
@@ -964,7 +964,7 @@ about:
   icons:
     - { class: "iconfont icon-github-fill", link: "https://github.com/wangqianyv123/", tip: "GitHub" }
     # - { class: "iconfont icon-douban-fill", link: "https://douban.com", tip: "豆瓣" }
-    - { class: "iconfont icon-wechat-fill", qrcode: "/img/wx.jpg" }
+    - { class: "iconfont icon-wechat-fill", qrcode: "/img/show.png" }
 
 
 #---------------------------
