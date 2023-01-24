@@ -4,8 +4,58 @@ date: 2023-01-24 14:42:18
 tags: [Linux, mysql]
 excerpt: 使用mysql进行远程连接
 categories: Linux
-index_img: /img/index_img/24.png
-banner_img: /img/banner_img/background17.jpg
+index_img: /img/index_img/17.png
+banner_img: /img/banner_img/background24.jpg
 ---
 
-mysql 默认开放端口3306，只能够本地访问，为了远程连接数据库，需要进行一些设置
+mysql 默认开放端口3306，只能够本地访问，为了远程连接数据库，需要进行一些设置。
+
+## 1. 开放端口
+
+查看3306端口
+```powershell
+netstat -apn | grep 3306
+```
+
+修改bind-address
+
+修改mysql的配置文件/etc/mysql/my.conf，有些版本配置文件地址为/etc/mysql/mysql.conf.d/mysqld.cnf，将bind-address地址设置为无ip访问限制：
+bind-address=0.0.0.0
+重启mysql：
+
+```powershell
+service mysql restart
+```
+
+## 2. 修改用户权限
+修改mysql的mysql数据库user表的Host
+
+```bash
+MySQL [(none)]>use mysql;
+#查看现有用户,密码及允许连接的主机
+MySQL [mysql]> SELECT User, Password, Host FROM user;        
++------+-------------------------------------------+-----------+
+| User | Password                                  | Host      |
++------+-------------------------------------------+-----------+
+| root | *6BB4837EB74329105EE4568DDA7DC67ED2CA2AD9 | localhost |
+| root | *6BB4837EB74329105EE4568DDA7DC67ED2CA2AD9 | 127.0.0.1 |
++------+-------------------------------------------+-----------+
+2 rows in set (0.00 sec)
+
+#设置为所有IP都可以访问，比较危险，不建议。
+MySQL [mysql]> UPDATE user SET Host='%' where user='root' AND Host='localhost' LIMIT 1;       
+MySQL [mysql]> flush privileges;
+#再次查看现有用户,密码及允许连接的主机
+MySQL [mysql]> SELECT User, Password, Host FROM user;       
++------+-------------------------------------------+-----------+
+| User | Password                                  | Host      |
++------+-------------------------------------------+-----------+
+| root | *6BB4837EB74329105EE4568DDA7DC67ED2CA2AD9 |           |
+| root | *6BB4837EB74329105EE4568DDA7DC67ED2CA2AD9 | 127.0.0.1 |
++------+-------------------------------------------+-----------+
+
+```
+
+## 3. 检查防火墙和安全组
+
+检测主机的防火墙和安全组
