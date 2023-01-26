@@ -1,12 +1,14 @@
 ---
-title: mysql远程连接
+title: mysql和redis的远程连接和
 date: 2023-01-24 14:42:18
 tags: [Linux, mysql]
-excerpt: 使用mysql进行远程连接
+excerpt: 远程连接mysql和redis
 categories: Linux
 index_img: /img/index_img/17.png
 banner_img: /img/banner_img/background24.jpg
 ---
+
+# mysql
 
 mysql 默认开放端口3306，只能够本地访问，为了远程连接数据库，需要进行一些设置。
 
@@ -19,8 +21,8 @@ netstat -apn | grep 3306
 
 修改bind-address
 
-修改mysql的配置文件/etc/mysql/my.conf，有些版本配置文件地址为/etc/mysql/mysql.conf.d/mysqld.cnf，将bind-address地址设置为无ip访问限制：
-bind-address=0.0.0.0
+修改mysql的配置文件/etc/mysql/my.conf，有些版本配置文件地址为/etc/mysql/mysql.conf.d/mysqld.cnf，将bind-address地址设置为无ip访问限制：bind-address=0.0.0.0
+
 重启mysql：
 
 ```powershell
@@ -59,3 +61,21 @@ MySQL [mysql]> SELECT User, Password, Host FROM user;
 ## 3. 检查防火墙和安全组
 
 检测主机的防火墙和安全组
+
+# redis
+
+远程链接redis首先需要修改redis的配置文件redis.conf,这个文件在redis的目录下,我们使用vim编辑该文件。
+
+1. 注释bind属性
+2. 如果你想在后台启动，并不关闭，那么将下面参数设置为yes（开启守护线程）搜索：daemonize
+3. 远程连接保护，这里选择关闭搜索：protected-mode
+
+有两种启动方式
+1. 直接启动 
+   ```bash
+   redis-server
+   ```
+2. 配置文件启动
+   ```bash
+   redis-server /etc/redis.conf
+   ```
