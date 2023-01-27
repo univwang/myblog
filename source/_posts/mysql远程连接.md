@@ -1,5 +1,5 @@
 ---
-title: mysql和redis的远程连接和
+title: mysql和redis的远程连接
 date: 2023-01-24 14:42:18
 tags: [Linux, mysql]
 excerpt: 远程连接mysql和redis

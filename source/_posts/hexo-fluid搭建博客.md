@@ -23,11 +23,11 @@ banner_img: /img/banner_img/background1.jpg
 ## 评论功能
 在国际版leancloud创建应用
 
-![](https://raw.githubusercontent.com/wangqianyv123/image-hosting/main/img/202208172110804.png)
+![](https://raw.githubusercontent.com/univwang/img/master/20230127140004.png)
 
 创建Commnet数据库
 
-![](https://raw.githubusercontent.com/wangqianyv123/image-hosting/main/img/202208172109839.png)
+![](https://raw.githubusercontent.com/univwang/img/master/20230127140012.png)
 
 修改hexo的主题配置
 
