@@ -109,8 +109,8 @@ theme: fluid
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: git
-  # repository: https://github.com/wangqianyv123/wangqianyv123.github.io.git
-  repository: git@github.com:wangqianyv123/wangqianyv123.github.io.git
+  # repository: https://github.com/123/123.github.io.git
+  repository: git@github.com:123/123.github.io.git
 
 
 # markdown:
