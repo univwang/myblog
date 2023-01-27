@@ -55,10 +55,9 @@ picgo我们已经很熟悉了，可以快捷上传图片到图床。使用又拍
 发现博客上线github后无法正常显示图片，因此又采用了GitHub图床。
 </p>
 
+![](https://raw.githubusercontent.com/univwang/img/master/20230127191313.png)
 
-![](https://raw.githubusercontent.com/wangqianyv123/image-hosting/main/img/202208172109946.png)
 
-
-![](https://raw.githubusercontent.com/wangqianyv123/image-hosting/main/img/202208172108613.jpg)
+![](https://raw.githubusercontent.com/univwang/img/master/20230127191335.png)
 
 
