@@ -5,7 +5,7 @@ tags: [机器学习]
 excerpt: CubeAI使用
 categories: 机器学习
 index_img: /img/index_img/2.png
-banner_img: /img/banner_img/background27.jpg
+banner_img: /img/banner_img/background29.jpg
 ---
 
 [CubeAI](https://openi.pcl.ac.cn/cubeai/cubeai-model-zoo)
