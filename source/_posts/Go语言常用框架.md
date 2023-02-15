@@ -15,6 +15,8 @@ banner_img: /img/banner_img/background30.jpg
 
 一个web框架
 
+<a class="btn" target="_blank" rel="noopener" style="font-size:20px; color: green" href="https://gin-gonic.com/zh-cn/docs/introduction/" title="github">gin文档</a>
+
 ## gorm框架
 
 <a class="btn" target="_blank" rel="noopener" style="font-size:20px; color: green" href="https://gorm.io/docs/index.html" title="github">gorm文档</a>

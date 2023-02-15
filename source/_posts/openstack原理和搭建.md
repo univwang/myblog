@@ -84,6 +84,20 @@ ln -s /usr/bin/pip3 /usr/bin/pip
 ln -s /usr/bin/python3 /usr/bin/python
 ```
 
+添加stack用户
+```bash
+# 添加 stack 用户
+sudo useradd -s /bin/bash -d /opt/stack -m stack
+
+# 授予 sudo 权限
+echo "stack ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/stack
+
+# 以 stack 用户登录
+sudo su - stack
+```
+
+
+
 下载devstack
 ```bash
 git clone https://opendev.org/openstack/devstack
@@ -94,7 +108,7 @@ vim local.conf
 
 [[local|localrc]]
 HOST_IP=10.0.2.15
-GIT_BASE=https://github.com.cnpmjs.org
+GIT_BASE=http://git.trystack.cn
 
 ADMIN_PASSWORD=password
 DATABASE_PASSWORD=$ADMIN_PASSWORD
