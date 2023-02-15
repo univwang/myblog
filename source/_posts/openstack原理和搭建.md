@@ -114,43 +114,6 @@ FORCE=yes ./stack.sh
 
 ![](https://raw.githubusercontent.com/univwang/img/master/20230201011935.png)
 
-### Centos 配置
-1. 配置虚拟机镜像、内存、cpu等信息
-2. 配置网络
-    ```bash
-    cat /etc/sysconfig/network-scripts/ifcfg-eth0 
-    TYPE=Ethernet
-    BOOTPROTO=static
-    NAME=eth0
-    DEVICE=eth0
-    ONBOOT=yes
-    IPADDR=10.0.8.10
-    NETMASK=255.255.248.0
-    GATEWAY=10.0.0.254
-    DNS1=223.6.6.6
-    DNS2=114.114.114.114
-    ```
-    ```bash
-    systemctl restart network
-    ```
-    ```bash
-    sed -i "s/SELINUX=enforcing/SELINUX=disabled/g" /etc/selinux/config; setenforce 0; systemctl stop firewalld; systemctl disable firewalld
-    ```
-    ```bash
-    systemctl stop NetworkManager; systemctl disable NetworkManager
-    ```
-    ```bash
-    curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo
-    yum clean all; yum makecache
-    ```
-    ```bash
-    yum install -y bash-completion vim telnet bridge-utils yum-utils
-    yum -y update
-    reboot
-    ```
-
-3. 
-
 
 ## 解决没有认证的问题
 ```bash
