@@ -17,6 +17,8 @@ banner_img: /img/banner_img/background30.jpg
 
 ## gorm框架
 
+<a class="btn" target="_blank" rel="noopener" style="font-size:20px; color: green" href="https://gorm.io/docs/index.html" title="github">gorm文档</a>
+
 一个ORM框架，能够实现go代码->数据库的表
 
 ## gorm-gen框架
