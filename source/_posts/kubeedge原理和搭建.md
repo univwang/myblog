@@ -186,12 +186,14 @@ mv keadm-v1.12.1-linux-amd64/keadm/keadm /usr/local/bin/
 
 ```bash
 keadm init --advertise-address=10.0.8.10 --set iptablesManager.mode="external" --profile version=v1.12.1
+# --set cloudCore.modules.dynamicController.enable=true
 ```
 execute keadm command failed: timed out waiting for the condition
 
 [删除污点](http://www.yaotu.net/biancheng/54088.html)
 [增加容忍度](https://blog.csdn.net/weixin_45566487/article/details/127184033) (未做)
-[防止proxy调度到边缘节点]() (未做) 
+[防止proxy调度到边缘节点](https://www.cnblogs.com/ltaodream/p/15200259.html)
+[防止proxy调度](https://segmentfault.com/a/1190000040225049)
 [修改docker文件](https://blog.csdn.net/douniwanwcy/article/details/123986354)
 
 ![](https://raw.githubusercontent.com/univwang/img/master/20230214172244.png)
@@ -245,9 +247,10 @@ keadm join --token=$TOKEN --cloudcore-ipport=$SERVER --kubeedge-version=1.12.1
 ```
 
 6. 查看edgecore.service
+
 ```bash
 systemctl status edgecore.service 
-````
+```
 
 ![](https://raw.githubusercontent.com/univwang/img/master/20230214175020.png)
 
