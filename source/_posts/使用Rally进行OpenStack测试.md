@@ -1,8 +1,8 @@
 ---
-title: CubeAI使用
+title: 使用Rally进行OpenStack测试
 date: 2023-02-13 14:42:18
 tags: [OpenStack]
-excerpt: CubeAI使用
+excerpt: 使用Rally进行OpenStack测试
 categories: OpenStack
 index_img: /img/index_img/4.png
 banner_img: /img/banner_img/background31.jpg
@@ -10,6 +10,7 @@ banner_img: /img/banner_img/background31.jpg
 
 <!-- 19.png background31.png -->
 
+## 入门
 
 <a class="btn" target="_blank" rel="noopener" style="font-size:20px; color: green" href="https://rally.readthedocs.io/en/latest/index.html" title="github">Rally文档</a>
 
@@ -55,3 +56,6 @@ git clone https://github.com/openstack/rally-openstack.git
 
 rally task start boot-and-delete.yaml
 ```
+
+
+## 进阶
