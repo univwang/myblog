@@ -129,11 +129,14 @@ systemctl start docker
 # kubernetes 官方推荐 docker 等使用 systemd 作为 cgroupdriver，否则 kubelet 启动不了
 cat <<EOF > daemon.json
 {
-  "exec-opts": ["native.cgroupdriver=systemd"],
+  "exec-opts": ["native.cgroupdriver=cgroupfs"],
   "registry-mirrors": ["https://ud6340vz.mirror.aliyuncs.com"]
 }
 EOF
 mv daemon.json /etc/docker/
+
+遇到一个问题是kubelet和docker的cgroup不匹配
+[问题解决](https://blog.csdn.net/mkdir_/article/details/109189436)
 
 # 重启生效
 systemctl daemon-reload
