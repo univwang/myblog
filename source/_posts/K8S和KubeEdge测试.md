@@ -1,11 +1,11 @@
 ---
 title: K8S和KubeEdge测试.md
-date: 2023-02-15 14:42:18
+date: 2023-02-20 14:42:18
 tags: [K8S, KubeEdge]
 excerpt: 使用kind kubemark CL2等工具进行集群测试
 categories: KubeEdge
-index_img: /img/index_img/4.png
-banner_img: /img/banner_img/background31.jpg
+index_img: /img/index_img/5.png
+banner_img: /img/banner_img/background1.jpg
 ---
 
 <!-- 19.png background31.png -->
