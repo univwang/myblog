@@ -42,7 +42,7 @@ yum -y update
 3. 安装一些工具
 
 ```bash
-yum install -y bash-completion vim telnet bridge-utils yum-utils
+yum install -y bash-completion vim telnet bridge-utils yum-utils git
 ```
 
 4. 关闭SElinux和防火墙
@@ -134,15 +134,12 @@ cat <<EOF > daemon.json
 }
 EOF
 mv daemon.json /etc/docker/
-
-遇到一个问题是kubelet和docker的cgroup不匹配
-[问题解决](https://blog.csdn.net/mkdir_/article/details/109189436)
-
 # 重启生效
 systemctl daemon-reload
 systemctl restart docker
-
 ```
+遇到一个问题是kubelet和docker的cgroup不匹配
+[问题解决](https://blog.csdn.net/mkdir_/article/details/109189436)
 2. k8s初始化
 
 ```bash
@@ -191,6 +188,13 @@ keadm init --advertise-address=10.0.8.10 --set iptablesManager.mode="external" -
 execute keadm command failed: timed out waiting for the condition
 
 [删除污点](http://www.yaotu.net/biancheng/54088.html)
+
+```bash
+kubectl describe nodes master | grep Taints
+kubectl taint node master node-role.kubernetes.io/master-
+
+```
+
 [增加容忍度](https://blog.csdn.net/weixin_45566487/article/details/127184033) (未做)
 [防止proxy调度到边缘节点](https://www.cnblogs.com/ltaodream/p/15200259.html)
 [防止proxy调度](https://segmentfault.com/a/1190000040225049)
