@@ -115,8 +115,7 @@ go run cmd/clusterloader.go --testconfig=test/config.yaml --provider=kind --kube
 ```
 ![](https://raw.githubusercontent.com/univwang/img/master/202302221206175.png)
 
-如果运行失败，则需要更换镜像
-
+如果运行失败，则需要更换镜像`image: opsdockerimage/e2e-test-images-agnhost:2.32`
 ![](https://raw.githubusercontent.com/univwang/img/master/202302221222035.png)
 
 ### 3.测试分析
