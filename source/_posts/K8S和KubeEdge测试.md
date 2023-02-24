@@ -38,6 +38,19 @@ ClusterLoader2 (CL2) is a "bring your own yaml" Kubernetes load testing tool bei
 
 [文档](https://github.com/kubernetes/perf-tests/tree/master/clusterloader2)
 
+
+#### 4. minikube
+
+一个单机生成k8s集群的工具
+
+[官网](https://minikube.sigs.k8s.io/docs/start/)
+
+#### 5. kube-prometheus
+
+此项目是简化prometheus安装的一个开源项目
+
+[官网]()
+
 ## 测试入门
 
 ### 1.搭建环境
