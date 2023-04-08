@@ -255,6 +255,7 @@ keadm join --token=$TOKEN --cloudcore-ipport=$SERVER --kubeedge-version=1.12.1
 ```bash
 systemctl status edgecore.service 
 ```
+出现问题可以重启master节点试试
 
 ![](https://raw.githubusercontent.com/univwang/img/master/20230214175020.png)
 
