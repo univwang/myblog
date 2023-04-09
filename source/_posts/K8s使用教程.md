@@ -1,11 +1,11 @@
 ---
 title: K8s使用教程
-date: 2023-03-19 16:42:18
+date: 2023-04-09 12:42:18
 tags: [K8s]
 excerpt: K8s使用教程
 categories: K8s
-index_img: /img/index_img/9.png
-banner_img: /img/banner_img/background5.jpg
+index_img: /img/index_img/10.png
+banner_img: /img/banner_img/background6.jpg
 ---
 
 主要介绍一下K8s的功能和使用
