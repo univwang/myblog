@@ -142,3 +142,28 @@ docker run -it --privileged=true -v /宿主机绝对路径目录:/容器内目�
 ```sh
 docker run -it  --privileged=true --volumes-from 父类  --name u2 ubuntu
 ```
+
+
+## Docker技巧
+
+### docker如何在arm架构上运行amd镜像
+
+```bash
+$ vim /etc/docker/daemon.json
+{
+  "experimental": true
+}
+
+#验证buildx版本
+docker buildx version
+
+#重启docker ***
+systemctl restart docker
+
+#检查是否启用
+docker info|grep Experimental
+
+
+docker run --privileged --rm tonistiigi/binfmt --install all
+docker buildx build -t colorization:v1 --platform=linux/amd64 . --load
+```
