@@ -167,3 +167,29 @@ docker info|grep Experimental
 docker run --privileged --rm tonistiigi/binfmt --install all
 docker buildx build -t colorization:v1 --platform=linux/amd64 . --load
 ```
+
+
+
+## 配置镜像中心Harbor
+
+
+<a class="btn" target="_blank" rel="noopener" style="font-size:20px; color: green" href="https://goharbor.io/docs/2.7.0/install-config/" title="github">Harbor下载</a>
+
+
+1. 下载Harbor
+
+```sh
+wget https://github.com/goharbor/harbor/releases/download/v1.10.17/harbor-offline-installer-v1.10.17.tgz
+wget -zxvf harbor-offline-installer-v1.10.17.tgz
+```
+
+2. 配置
+
+```sh
+```
+
+3. 修改yml文件
+
+4. 安装
+
+5. 登录
