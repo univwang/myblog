@@ -195,9 +195,9 @@ kubectl taint node master node-role.kubernetes.io/master-
 
 ```
 
-[增加容忍度](https://blog.csdn.net/weixin_45566487/article/details/127184033) (未做)
+<!-- [增加容忍度](https://blog.csdn.net/weixin_45566487/article/details/127184033) (未做) -->
 [防止proxy调度到边缘节点](https://www.cnblogs.com/ltaodream/p/15200259.html)
-[防止proxy调度](https://segmentfault.com/a/1190000040225049)
+<!-- [防止proxy调度](https://segmentfault.com/a/1190000040225049) -->
 [修改docker文件](https://blog.csdn.net/douniwanwcy/article/details/123986354)
 
 ![](https://raw.githubusercontent.com/univwang/img/master/20230214172244.png)
@@ -262,3 +262,9 @@ systemctl status edgecore.service
 7. 开启logs和exec
 
 [参考](https://www.bilibili.com/video/BV1z84y1r79h/?spm_id_from=333.337.search-card.all.click&vd_source=79e5dcf7c720cad10d7ab9bc065cbe1a)
+
+云端开启
+
+8. 修改容器运行时
+
+[官方教程](https://kubeedge.io/zh/docs/advanced/cri/)
