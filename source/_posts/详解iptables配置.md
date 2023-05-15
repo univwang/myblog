@@ -59,15 +59,15 @@ filter表（filter table）：最后是filter表，它用于数据包的过滤�
 
 
 
-- PREROUTING链：（网卡前）在数据包进入网络协议栈后，但在路由选择之前，会首先经过PREROUTING链。在该链中，可以进行一些预处理操作，例如DNAT（目标地址转换）等。
+- PREROUTING链：在数据包进入网络协议栈后，但在路由选择（没有决定从那个端口出去）之前，会首先经过PREROUTING链。在该链中，可以进行一些预处理操作，例如DNAT（目标地址转换）等。
 
-- INPUT链：（网卡后）接下来，经过路由选择后，如果目标地址是本机，数据包将进入INPUT链。在INPUT链中，可以根据规则进行进一步的过滤和处理。如果数据包被接受，则交由上层应用程序进行处理。
+- INPUT链：接下来，经过路由选择后，如果目标地址是本机，数据包将进入INPUT链。在INPUT链中，可以根据规则进行进一步的过滤和处理。如果数据包被接受，则交由上层应用程序进行处理。
 
-- FORWARD链：（网卡后）如果目标地址不是本机，而是其他主机，则数据包将进入FORWARD链。在FORWARD链中，可以根据规则进行转发决策，即将数据包转发到适当的目标地址。
+- FORWARD链：如果目标地址不是本机，而是其他主机，则数据包将进入FORWARD链。在FORWARD链中，可以根据规则进行转发决策，即将数据包转发到适当的目标地址。
 
-- OUTPUT链：（网卡前）在数据包离开本机之前，会经过OUTPUT链。在该链中，可以对源地址为本机的数据包进行处理。例如，进行源地址伪装、修改端口等操作。
+- OUTPUT链：在数据包离开本机之前，会经过OUTPUT链。在该链中，可以对源地址为本机的数据包进行处理。例如，进行源地址伪装、修改端口等操作。
 
-- POSTROUTING链（网卡后）：最后，数据包离开本机之后，会经过POSTROUTING链。在该链中，可以进行一些后处理操作，例如SNAT（源地址转换）等。
+- POSTROUTING链：最后，数据包离开本机之后，会经过POSTROUTING链。在该链中，可以进行一些后处理操作，例如SNAT（源地址转换）等。
 
 ## NAT
 
@@ -79,6 +79,20 @@ Chain PREROUTING (policy ACCEPT 100 packets, 22509 bytes)
   102 22998 KUBE-PORTALS-CONTAINER  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* handle ClusterIPs; NOTE: this must be before the NodePort rules */
     3   172 DOCKER     all  --  *      *       0.0.0.0/0            0.0.0.0/0            ADDRTYPE match dst-type LOCAL
     2   112 KUBE-NODEPORT-CONTAINER  all  --  *      *       0.0.0.0/0            0.0.0.0/0            ADDRTYPE match dst-type LOCAL /* handle service NodePorts; NOTE: this must be the last rule in the chain */
+```
+
+
+当数据包进入网卡前，匹配KUBE-PORTALS-CONTAINER规则链，如果匹配失败，匹配DOCKER规则链，如果匹配失败，最后匹配KUBE-NODEPORT-CONTAINER
+
+
+如果是从docker0网卡进入的，return，如果不是从docker0进入的，匹配目的端口1883和9100（这是docker的端口映射），修改目的地址和端口号为172.17.0.2:1883，进入内核进行转发。
+
+```bash
+Chain DOCKER (2 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 RETURN     all  --  docker0 *       0.0.0.0/0            0.0.0.0/0           
+    1    60 DNAT       tcp  --  !docker0 *       0.0.0.0/0            0.0.0.0/0            tcp dpt:1883 to:172.17.0.2:1883
+    4   240 DNAT       tcp  --  !docker0 *       0.0.0.0/0            0.0.0.0/0            tcp dpt:9100 to:172.17.0.3:9100
 ```
 
 
