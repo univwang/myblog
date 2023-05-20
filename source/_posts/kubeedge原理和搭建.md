@@ -222,7 +222,7 @@ systemctl start docker
 cat <<EOF > daemon.json
 {
   "exec-opts": ["native.cgroupdriver=cgroupfs"],
-  "registry-mirrors": ["https://ud6340vz.mirror.aliyuncs.com"]
+  "registry-mirrors": ["https://63xzb4n0.mirror.aliyuncs.com"]
 }
 EOF
 mv daemon.json /etc/docker/
