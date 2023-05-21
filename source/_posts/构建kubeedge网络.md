@@ -9,13 +9,64 @@ banner_img: /img/banner_img/background10.jpg
 ---
 
 
-## 网络环境
-
 使用桥接模式的虚拟机作为云节点，NAT模式的主机作为边缘节点，边缘节点可以通过IP地址访问云节点。
 
 >桥接模式的虚拟机需要指定和宿主机相同的网段、网卡、网关
 
+## Ubuntu20.04配置
 
+默认是不允许root远程登录的，可以再配置文件开启。
+
+sudo vi /etc/ssh/sshd_config
+
+找到PermitRootLogin without-password 修改为PermitRootLogin yes （本人遇到过）
+
+配置静态ip
+
+```bash
+vim /etc/netplan/00-installer-config.yaml 
+```
+
+```bash 
+# This is the network config written by 'subiquity'
+network:
+  ethernets:
+    ens33:
+      addresses:
+        - 10.0.8.12/24
+      gateway4: 10.0.8.254
+      nameservers:
+          addresses: [8.8.8.8, 114.114.114.144]
+  version: 2
+```
+
+```bash
+sudo netplan apply
+```
+
+配置国内镜像源
+```bash
+# 设置镜像源
+sudo vim /etc/apt/sources.list
+
+deb https://mirrors.aliyun.com/ubuntu/ focal main restricted universe multiverse
+deb-src https://mirrors.aliyun.com/ubuntu/ focal main restricted universe multiverse
+
+deb https://mirrors.aliyun.com/ubuntu/ focal-security main restricted universe multiverse
+deb-src https://mirrors.aliyun.com/ubuntu/ focal-security main restricted universe multiverse
+
+deb https://mirrors.aliyun.com/ubuntu/ focal-updates main restricted universe multiverse
+deb-src https://mirrors.aliyun.com/ubuntu/ focal-updates main restricted universe multiverse
+
+# deb https://mirrors.aliyun.com/ubuntu/ focal-proposed main restricted universe multiverse
+# deb-src https://mirrors.aliyun.com/ubuntu/ focal-proposed main restricted universe multiverse
+
+deb https://mirrors.aliyun.com/ubuntu/ focal-backports main restricted universe multiverse
+deb-src https://mirrors.aliyun.com/ubuntu/ focal-backports main restricted universe multiverse
+
+# 更新
+sudo apt update
+```
 
 ## 部署云节点
 
