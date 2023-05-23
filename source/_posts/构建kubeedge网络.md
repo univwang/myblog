@@ -68,6 +68,93 @@ deb-src https://mirrors.aliyun.com/ubuntu/ focal-backports main restricted unive
 sudo apt update
 ```
 
+## centos配置
+
+
+1. 配置网络
+
+```bash
+TYPE=Ethernet
+BOOTPROTO=static
+NAME=ens33
+DEVICE=ens33
+ONBOOT=yes
+IPADDR=10.0.8.10
+NETMASK=255.255.255.0
+GATEWAY=10.0.8.254
+DNS1=8.8.8.8
+DNS2=114.114.114.114
+```
+
+2. 更换阿里源
+
+
+```bash
+yum install -y wget
+wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+yum clean all
+yum makecache
+yum -y update
+```
+
+3. 安装一些工具
+
+```bash
+yum install -y bash-completion vim telnet bridge-utils yum-utils git
+```
+
+4. 关闭SElinux和防火墙
+
+```bash
+sudo setenforce 0
+sudo sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
+
+sudo systemctl stop firewalld
+sudo systemctl disable --now firewalld
+```
+
+5. 关闭swap
+
+```bash
+sudo swapoff -a && sysctl -w vm.swappiness=0
+sudo sed -ri '/^[^#]*swap/s@^@#@' /etc/fstab
+```
+
+6. 网络配置，开启转发机制
+
+```bash
+cat >> /etc/sysctl.d/k8s.conf <<EOF
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+net.ipv4.ip_forward = 1
+vm.swappiness=0
+EOF
+
+modprobe br_netfilter
+sysctl -p /etc/sysctl.d/k8s.conf
+```
+
+7. 同步时钟
+
+
+```
+yum install -y ntpdate
+ntpdate cn.pool.ntp.org
+```
+
+8. 配置hostname
+
+```bash
+hostnamectl set-hostname master
+
+vim /etc/hosts
+
+
+10.0.8.10 master
+10.0.8.11 node1
+```
+
+
 ## 部署云节点
 
 ### 关闭防火墙
@@ -134,7 +221,6 @@ apt-get install -y kubelet=1.22.13-00 kubeadm=1.22.13-00 kubectl=1.22.13-00
 ```bash
 kubeadm init --image-repository=registry.aliyuncs.com/google_containers --pod-network-cidr=10.244.0.0/16
 
-kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 ```
 
 
@@ -256,13 +342,34 @@ tar xf cni-plugins-linux-amd64-v0.9.1.tgz -C /opt/cni/bin
 ### 修改edgecore文件
 
 [参考1](https://github.com/kubeedge/kubeedge/issues/2677)
+[参考2](https://github.com/kubeedge/kubeedge/issues/4521)
+
+使用containerd作为容器运行时
+[参考3](https://cloud.tencent.com/developer/article/2163912)
+[参考4](https://zhuanlan.zhihu.com/p/612051521)
+
+修改完成后，为了让containerd正确的创建网络，安装cni-plugins-linux-amd64，编写cni配置文件
+[参考5](https://github.com/kubeedge/kubeedge/issues/4589)
+
+这样应该可以实现跨宿主机容器通信，如果不行的话，删除网桥，delete flannel和测试的pod，重新创建一次
+
+```bash
+输入命令“ip link show”查看当前系统中的网桥信息，找到需要删除的网桥名称。
+输入命令“ip link set cni0 down”将该网桥停止工作。
+输入命令“brctl delbr cni0”删除该网桥。
+```
+
+### 最终的结果
+
+[部分配置文件]()
+有三个节点，其中一个云节点桥接模式，两个边缘节点nat模式（在一个局域网），边缘节点可以ping通云节点，云节点无法ping通边缘节点。
+![](https://raw.githubusercontent.com/univwang/img/master/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-05-23%20213844.png)
+
+### 问题一：为什么flannel实现的只有边缘节点的跨宿主机容器通信，云节点无法通信？
+
+![](https://raw.githubusercontent.com/univwang/img/master/202305232202718.png)
+如图，使用`node1`节点的容器ping `node2`节点的容器，tcpdump发现会进行udp的封装然后进行发送，request和reply的目的地址为node1和node2的局域网ip地址
 
 
-### 修改docker文件
-
-修改完成后，不知道什么原因，在边缘节点创建pod的时候无法创建cni网桥，然后使用设置的网段创建pod，而是还是使用docker，不过会创建flannel.1，所以需要修改docker的网段。
-
-[参考](https://zhuanlan.zhihu.com/p/403145258)
-
-
-### 问题：为啥
+![](https://raw.githubusercontent.com/univwang/img/master/202305232200364.png)
+使用使用`node1`节点的容器ping `master`节点的容器，发现无法得到reply，通过tcpdump捕获master节点的数据包，发现reply的目的地址为node1的局域网ip，这是不可达的，因此无法reply
