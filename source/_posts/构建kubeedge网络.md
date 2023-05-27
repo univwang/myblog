@@ -351,13 +351,15 @@ tar xf cni-plugins-linux-amd64-v0.9.1.tgz -C /opt/cni/bin
 修改完成后，为了让containerd正确的创建网络，安装cni-plugins-linux-amd64，编写cni配置文件
 [参考5](https://github.com/kubeedge/kubeedge/issues/4589)
 
-这样应该可以实现跨宿主机容器通信，如果不行的话，删除网桥，delete flannel和测试的pod，重新创建一次
+这样应该可以实现跨宿主机容器通信，如果不行的话，删除网桥，delete flannel和测试的pod，重新创建一次。
 
 ```bash
 输入命令“ip link show”查看当前系统中的网桥信息，找到需要删除的网桥名称。
 输入命令“ip link set cni0 down”将该网桥停止工作。
 输入命令“brctl delbr cni0”删除该网桥。
 ```
+
+检查flannel.1的neigh `ip neigh show dev flannel.1`，检查是否正确，如果不正确需要重新apply flannel.yaml
 
 ### 最终的结果
 
@@ -373,3 +375,24 @@ tar xf cni-plugins-linux-amd64-v0.9.1.tgz -C /opt/cni/bin
 
 ![](https://raw.githubusercontent.com/univwang/img/master/202305232200364.png)
 使用使用`node1`节点的容器ping `master`节点的容器，发现无法得到reply，通过tcpdump捕获master节点的数据包，发现reply的目的地址为node1的局域网ip，这是不可达的，因此无法reply
+
+### 构建kube-proxy，边缘节点和云节点都有kube-proxy，尝试解释为什么在云上局域网通过ClusterIP访问此服务无法访问通，然而在边缘局域网通过ClusterIP访问此服务可以访问通（越详细越好）
+
+kube-proxy实现的DNAT的过程，将ClusterIP转化为指定pod的ip+port。pod访问clusterIP的流程，PREROUTING->KUBE-SERVICE->KUBE-SVC-??->KUBE-SEP-??，通对于进入 PREROUTING 链的都转到 KUBE-SERVICES 链进行处理；2、在 KUBE-SERVICES 链，对于访问 clusterIP 的转发到 KUBE-SVC-；
+3、访问 KUBE-SVC- 的使用随机数负载均衡，并转发到 KUBE-SEP- 上；4、KUBE-SEP-，设置 mark 标记，进行 DNAT 并转发到具体的 pod 上，如果某个 service 的 endpoints 中没有 pod，那么针对此 service 的请求将会被 drop 掉。这样，通过DNAT，发送到ClusterIp的请求转发到了endpoint，也就是pod的Ip，结合问题一，因为中心云集群和边缘云集群不互通，中心云集群的pod无法访问边缘云集群的pod，因此也无法通过ClusterIp访问边缘节点上的service。
+
+
+
+查看svc信息
+```bash
+root@master:~# kubectl get svc
+NAME           TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)     AGE
+hostname-svc   ClusterIP   10.107.32.57   <none>        12345/TCP   41h
+kubernetes     ClusterIP   10.96.0.1      <none>        443/TCP     3d4h
+root@master:~# kubectl get pods -owide
+NAME                             READY   STATUS    RESTARTS        AGE     IP            NODE     NOMINATED NODE   READINESS GATES
+hostname-edge-84cb45ccf4-vhfj2   1/1     Running   0               41h     10.244.3.10   node1    <none>           <none>
+nginx-1                          1/1     Running   0               2d18h   10.244.3.9    node1    <none>           <none>
+nginx-2                          1/1     Running   0               2d18h   10.244.2.8    node2    <none>           <none>
+nginx-3                          1/1     Running   3 (6h38m ago)   2d18h   10.244.0.15   master   <none>           <none>
+```
