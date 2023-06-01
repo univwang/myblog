@@ -1,5 +1,5 @@
 ---
-title: Linux安装go环境.md
+title: Linux安装go环境
 date: 2023-05-29 12:42:18
 tags: [Go]
 excerpt: 安装go环境
