@@ -1,5 +1,5 @@
 ---
-title: 构建kubeedge网络（二）
+title: 构建kubeedge网络（二)
 date: 2023-06-01 12:42:18
 tags: [kubeedge]
 excerpt: 整理kubeedge的安装过程
@@ -12,6 +12,9 @@ banner_img: /img/banner_img/background12.jpg
 使用桥接模式的虚拟机作为云节点，NAT模式的主机作为边缘节点，边缘节点可以通过IP地址访问云节点，但是云节点无法ping通边缘节点。
 
 >桥接模式的虚拟机需要指定和宿主机相同的网段、网卡、网关
+
+最终得到三个节点，一个云节点，可以被边缘节点访问，两个边缘节点在局域网中，无法被云节点访问。
+![](https://raw.githubusercontent.com/univwang/img/master/202306041515401.png)
 
 ## 基本配置
 
@@ -419,10 +422,15 @@ systemctl status edgecore
 
 安装上述步骤部署环境，得到了三个节点的集群，每个节点部署了kube-proxy和flannel，每个节点包含了cni0和flannel.1两个新增的网络设备。
 
-想要通过ClusterIP访问服务，需要通过kube-proxy，kube-proxy实现了DNAT的过程，将ClusterIP转化为指定pod的ip+port。pod访问clusterIP的流程，PREROUTING->KUBE-SERVICE->KUBE-SVC-??->KUBE-SEP-??，通对于进入 PREROUTING 链的都转到 KUBE-SERVICES 链进行处理；2、在 KUBE-SERVICES 链，对于访问 clusterIP 的转发到 KUBE-SVC-；3、访问 KUBE-SVC- 的使用随机数负载均衡，并转发到 KUBE-SEP- 上；4、KUBE-SEP-，设置 mark 标记，进行 DNAT 并转发到具体的 pod 上，如果某个 service 的 endpoints 中没有 pod，那么针对此 service 的请求将会被 drop 掉。这样，通过DNAT，发送到ClusterIp的请求转发到了endpoint，也就是pod的Ip。
-结合问题一，因为中心云集群和边缘云集群不互通，中心云集群的pod无法访问边缘云集群的pod，因此也无法通过ClusterIp访问边缘节点上的service。
+想要通过ClusterIP访问服务，需要通过kube-proxy，kube-proxy实现了DNAT的过程，将ClusterIP转化为指定pod的ip+port。pod访问clusterIP的流程，PREROUTING->KUBE-SERVICE->KUBE-SVC-??->KUBE-SEP-??.
+
+1.对于进入 PREROUTING 链的都转到 KUBE-SERVICES 链进行处理；
+2、在 KUBE-SERVICES 链，对于访问 clusterIP 的转发到 KUBE-SVC-；
+3、访问 KUBE-SVC- 的使用随机数负载均衡，并转发到 KUBE-SEP- 上；
+4、KUBE-SEP-，设置 mark 标记，进行 DNAT 并转发到具体的 pod 上，如果某个 service 的 endpoints 中没有 pod，那么针对此 service 的请求将会被 drop 掉。这样，通过DNAT，发送到ClusterIp的请求转发到了endpoint，也就是pod的Ip。
 
 当前主流的cni插件并不具备跨子网流量转发的能力，本身依赖网络三层可达。flannel基于vxlan技术，实现了pod IP的访问。
+因为中心云集群和边缘云集群不互通，中心云集群的pod无法访问边缘云集群的pod，因此也无法通过ClusterIp访问边缘节点上的service。
 
 ![](https://raw.githubusercontent.com/univwang/img/master/202305232202718.png)
 如图，使用`node1`节点的容器ping `node2`节点的容器，tcpdump发现会进行udp的封装然后进行发送，request和reply的目的地址为node1和node2的局域网ip地址
@@ -440,14 +448,25 @@ systemctl status edgecore
 [KubeEdge云原生边缘计算公开课19-EdgeMesh特性源码解析](https://www.bilibili.com/video/BV1bY4y1y75M/?spm_id_from=333.337.search-card.all.click&vd_source=79e5dcf7c720cad10d7ab9bc065cbe1a)
 
 
-安装部署edgemesh以后，会在所有节点创建一个edge-agent 的pod，负责拦截Service服务请求到edge agent中处理。
+安装部署edgemesh以后，会在所有节点创建一个edge-agent 的pod，负责拦截Service服务请求到edge agent中处理。edgemesh通过kubeedge边缘侧list-watch的能力，监听service、endpoints等元数据的增删改，再根据service、endpoints的信息创建iptables规则
 
 ```bash
 iptables -t nat -nvL
 ```
 ![](https://raw.githubusercontent.com/univwang/img/master/202306011033356.png)
 
-因为edge-agent通过libp2p的技术，通过Bootstrap、MDNS和DHT这些组件，实现了agent直接的相互连接，具有跨子网的能力，可将请求转发到指定节点，实现了跨子网通信。
+因为edge-agent通过libp2p的技术实现了tunnel，通过Bootstrap、MDNS和DHT这些组件，实现了agent之间的相互连接，具有跨子网的能力，可将请求转发到指定节点，实现了跨子网通信。 edgemesh将边缘节点之间的通信分为局域网内和跨局域网，局域网内通信：直接访问，跨局域网通信：打孔成功时，代理之间建立直接隧道，否则通过中继转发流量
 
 **然而通过PodIP访问此应用不能通？**
 
+通过PodIP的访问并没有被edgemesh拦截，通常情况下，边缘侧不使用kube-proxy和flannel，pod的ip由每个节点的容器运行时负责分配，无法访问ip也无法访问svc，当使用flannel等网络插件后，可通过唯一的podIP进行应用访问，不过，这依赖于三层网络的互通，与问题一的实质类似，云节点无法跨子网访问边缘容器，因此无法通过podIP访问应用。
+
+
+## 高阶任务（能提出思路也行，有代码实现可加分）：
+>【目标：尝试提前解决问题，同时也快速学习edgemesh原理与CNI原理；通过借助已有开源CNI项目解决问题】通过设计并实现一些方案，让edgemesh具备如下能力：CNI基础功能——容器网段划分（允许直接引用已有的开源CNI插件代码）CNI基础功能——podIP的流量转发（允许直接引用已有的开源CNI插件代码）
+
+学习了flannel cni网络插件的使用,实现了podIP流量的转发.
+
+>【目标：挑战目标】通过设计并实现一些方案，让同一局域网内的podIP流量转发使用CNI插件自身的能力，仅有跨子网的podIP流量转发通过libp2p转发
+
+项目规划中有较详细的思路,其中的关键点1. 使用cni网络插件分配容器网段,edgemesh获取和更新集群节点网络信息 2. 修改iptables规则,拦截不同局域网的podIP流量 3. 使用tunnel打通节点的流量,可以让不同的端口监听不同节点容器网段的流量,然后进行流量转发
