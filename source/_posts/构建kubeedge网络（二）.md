@@ -247,6 +247,8 @@ kubeadm init --image-repository=registry.aliyuncs.com/google_containers --pod-ne
 
 到[我的配置文件](https://github.com/univwang/kubeedge_configure_file)中找到kube-flannel
 
+**edgecore**需要设置dynamic
+
 ### 删除污点
 
 ```bash
