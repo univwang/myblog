@@ -4,7 +4,7 @@ date: 2023-06-08 17:00:18
 tags: [Go, libp2p]
 excerpt:  构建libp2p聊天室
 categories: Go
-index_img: /img/index_img/20.png
+index_img: /img/index_img/1.png
 banner_img: /img/banner_img/background21.jpg
 ---
 
